@@ -1,0 +1,105 @@
+<?php
+/* En el modelo se introducen los metodos de nuestra página (En este ejemplo el archivo se llama contactos_model.php)*/
+/*Los archivos creados en la carpeta model llevarán detrás de su nombre _model*/
+class Contactos_model extends CI_Model{
+	function insertar($data){
+		$this->db->insert('Contactos',$data);
+	}
+	function getAll(){
+		$query->this->db->get('Contactos');
+		return $query->result();
+	}
+}
+?>
+
+
+
+/*El controller es donde se contiene el código de una clase*/
+<?php
+
+class Contactos extends CI_Controller{
+
+	function __construct(){
+		parent::__construct();
+		$this->load->helper('form');
+		$this->load->model('contactos_model');
+	}
+	public function Index(){
+		$data['Titulo'] = "Pagina Principal" ;
+		$this->load->view("templates/header", $data);
+		$this->load->view("contactos/index");
+		$this->load->view("templates/footer");
+	}
+	public function agregar(){
+		$data['Titulo'] = "Pagina Principal" ;
+		$this->load->view("templates/header", $data);
+		$this->load->view("contactos/agregar");
+		$this->load->view("templates/footer");
+	}
+	public function AgregarContacto(){
+		$this-> form_validation->set_rules('nnombre','Nombre','required');
+		$this-> form_validation->set_rules('napellido','Apellido','required');
+		$this-> form_validation->set_rules('ntelefono','Telefono','required');
+
+		if($this->form_validation->run()==false){
+			$data['Titulo'] = "Pagina Principal" ;
+			$this->load->view("templates/header", $data);
+			$this->load->view("contactos/agregar");
+			$this->load->view("templates/footer");
+		}
+		else {
+			$data->array(
+				'Nombre'->this->input->post('nnombre'),
+				'Apellido'->this->input->post('napellido'),
+				'Telefono'->this->input->post('ntelefono')
+			);
+			$this->contactos_model->insertar($data);
+ 		}
+
+	}
+}
+?>
+
+/*Dentro de la carpeta view se creará una nueva carpeta llamada plantillas o templates*/
+/*Y dentro de esta 2 archivos .php el header (encabezado) y el footer (pie)*/
+
+<!doctype html>
+	<html lang="es">
+	<head>
+		 <meta charset="utf-8">
+    	 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+         <link rel="stylesheet" href="?<php echo base_url();>?/ assets/css/bootstrap.min.css>" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<title><?php echo $Titulo ?> | Agenda</title>
+		</head>
+
+		<body>
+			<nav class="navbar navbar-default" role="navigation">
+					<div class="container">
+						<div class="navbar-header">
+							<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#barra-collapse">
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+							</button>
+							<a class="navbar-brand" href="<?php echo base_url() ?>">Agenda</a>
+						</div>
+
+						<div class="navbar-collapse collapse" id="barra-collapse">
+								<ul class="nav navbar-nav">
+									<li><a href="<?php echo base_url()?>Contactos/">Contactos</a></li>
+									<li><a href="<?php echo base_url()?>Contactos/Agregar/">Agregar</a></li>
+								</ul>
+						</div>
+					</div>
+				</nav>
+			<center></center>
+
+/*Footer */
+			<em>&copy;<center>Copyright 2019 - Todos los derechos reservador</center> </em>
+			 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>
+		</body>
+	</hmtl>
